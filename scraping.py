@@ -19,6 +19,7 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
+        "hemispheres":  mars_hemispheres(browser),
         "last_modified": dt.datetime.now()}
 
     # stop webdriver and return data
@@ -94,7 +95,53 @@ def mars_facts():
     df.set_index('Description', inplace=True)
 
     # Convert df into html format, add bootstrap
-    return df.to_html()
+    return df.to_html(classes="table table-striped")
+
+# Challenge: function to scrape hemisphere data
+def mars_hemispheres(browser):
+
+    # 1. Use browser to visit the URL 
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+
+    # 2. Create a list to hold the images and titles.
+    hemisphere_image_urls = []
+
+    # Parse the html with soup
+    html = browser.html
+    mars_hemis_soup = soup(html, 'html.parser')
+    mars_hemi_info = mars_hemis_soup.find_all('div', class_='description')
+
+    for x in range(len(mars_hemi_info)):
+    
+        #   dictionary for information
+        hemispheres = {}
+    
+        # Find and click the full image button
+        mars_hemi_image_elem = browser.find_by_tag('h3')[x].click()
+   
+        # Parse the new html with soul
+        html = browser.html
+        one_hemi_soup = soup(html, 'html.parser')
+        hemi_img_url_rel = one_hemi_soup.find('img', class_='wide-image').get('src')
+
+        # absolute url
+        hemi_img_url = url+hemi_img_url_rel
+        
+        # Get hemisphere title
+        hemi_title = one_hemi_soup.find('h2', class_="title").text
+    
+        # add title and image to dictionary
+        hemispheres["title"] = hemi_title
+        hemispheres["image"] = hemi_img_url
+        
+        # add image and title to list
+        hemisphere_image_urls.append(hemispheres)
+    
+        #return to previous page for next hemisphere
+        browser.back()
+        
+    return hemisphere_image_urls
 
 if __name__ == "__main__":
     # If running as script, print scraped data
