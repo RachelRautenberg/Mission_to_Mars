@@ -6,4 +6,4 @@ With an interest in working for NASA one day and staying current on incoming inf
 Below are images from the completed page.
 
 ![mars_page1](https://github.com/RachelRautenberg/Mission_to_Mars/blob/main/Resources/mars_page1.PNG)
-![mars_page2]()
+![mars_page2](https://github.com/RachelRautenberg/Mission_to_Mars/blob/main/Resources/mars_page2.PNG)
